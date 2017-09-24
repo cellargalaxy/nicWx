@@ -4,6 +4,10 @@
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
          version="3.1">
 
+    <listener>
+        <listener-class>controler.WxListener</listener-class>
+    </listener>
+
     <filter>
         <filter-name>codingFilter</filter-name>
         <filter-class>controler.CodingFilter</filter-class>

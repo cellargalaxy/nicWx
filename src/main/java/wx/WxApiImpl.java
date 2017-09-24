@@ -31,7 +31,7 @@ public class WxApiImpl extends Thread implements WxApi {
 	private static final OpenIdApi OPEN_ID_API = new OpenIdApiImpl();
 	private static final TagApi TAG_API = new TagApiImpl();
 	private static final TemplateApi TEMPLATE_API = new TemplateApiImpl();
-	public static final WxApi WX_API = new WxApiImpl(ACCESS_TOKEN_API, OPEN_ID_API, TAG_API, TEMPLATE_API);
+	public static final WxApiImpl WX_API = new WxApiImpl(ACCESS_TOKEN_API, OPEN_ID_API, TAG_API, TEMPLATE_API);
 	
 	
 	public WxApiImpl(AccessTokenApi accessTokenApi, OpenIdApi openIdApi, TagApi tagApi, TemplateApi templateApi) {
@@ -40,9 +40,8 @@ public class WxApiImpl extends Thread implements WxApi {
 		this.tagApi = tagApi;
 		this.templateApi = templateApi;
 		runable = true;
-		flushAccessToken();
 		setName("微信服务号线程");
-		start();
+		flushAccessToken();
 	}
 	
 	@Override
