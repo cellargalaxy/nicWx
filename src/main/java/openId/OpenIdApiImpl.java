@@ -1,5 +1,6 @@
 package openId;
 
+import accessToken.AccessTokenApi;
 import org.apache.http.client.methods.HttpGet;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,17 +11,18 @@ import util.HttpRequestBaseResultGet;
  */
 public class OpenIdApiImpl implements OpenIdApi {
 	private static final String OPEN_ID_URL = "https://api.weixin.qq.com/cgi-bin/user/get?access_token=";
+	private final AccessTokenApi accessTokenApi;
 	
-	public JSONArray getOpenIds(String accessToken) {
-		HttpGet httpGet = new HttpGet(OPEN_ID_URL + accessToken);
+	public OpenIdApiImpl(AccessTokenApi accessTokenApi) {
+		this.accessTokenApi = accessTokenApi;
+	}
+	
+	public JSONObject getOpenIds() {
+		HttpGet httpGet = new HttpGet(OPEN_ID_URL + accessTokenApi.getAccessToken());
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpGet);
 		if (result == null) {
 			return null;
 		}
-		JSONObject jsonObject = new JSONObject(result);
-		if (jsonObject.has("data")) {
-			return jsonObject.getJSONObject("data").getJSONArray("openid");
-		}
-		return null;
+		return new JSONObject(result);
 	}
 }

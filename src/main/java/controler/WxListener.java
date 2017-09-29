@@ -10,10 +10,10 @@ import javax.servlet.ServletContextListener;
  */
 public class WxListener implements ServletContextListener{
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		WxApiImpl.WX_API.start();
+		WxApiImpl.WX_API.init();
 	}
 	
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		WxApiImpl.WX_API.interrupt();
+		WxApiImpl.WX_API.destroy();
 	}
 }

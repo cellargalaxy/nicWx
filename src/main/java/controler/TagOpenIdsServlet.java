@@ -2,6 +2,7 @@ package controler;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import tag.TagApi;
 import wx.WxApi;
 import wx.WxApiImpl;
 
@@ -25,15 +26,23 @@ public class TagOpenIdsServlet extends HttpServlet {
 			writer.close();
 			return;
 		}
-		WxApi wxApi = WxApiImpl.WX_API;
-		JSONArray tags = wxApi.getTags();
-		for (Object tag : tags) {
-			JSONObject jsonObject = (JSONObject) tag;
-			if (jsonObject.get("name").equals(tagName)) {
-				writer.write(wxApi.getTagOpenIds(jsonObject.getInt("id")).toString());
-				break;
+		TagApi tagApi = WxApiImpl.WX_API;
+		JSONObject jsonObject=tagApi.getTags();
+		if (jsonObject==null || !jsonObject.has("tags")) {
+			writer.write("[]");
+			writer.close();
+			return;
+		}
+		JSONArray tags=jsonObject.getJSONArray("tags");
+		for (Object object : tags) {
+			JSONObject tag = (JSONObject) object;
+			if (tag.get("name").equals(tagName)) {
+				writer.write(tagApi.getTagOpenIds(tag.getInt("id")).toString());
+				writer.close();
+				return;
 			}
 		}
+		writer.write("[]");
 		writer.close();
 	}
 }

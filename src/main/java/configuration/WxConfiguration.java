@@ -4,7 +4,7 @@ package configuration;
  * Created by cellargalaxy on 17-9-22.
  */
 public class WxConfiguration {
-	private static String conding;
+	private static String coding;
 	private static int socketTimeout;
 	private static int connectTimeout;
 	private static String appID;
@@ -13,21 +13,21 @@ public class WxConfiguration {
 	private static int templateSendTime;
 	
 	static {
-		conding = "utf-8";
+		coding = "utf-8";
 		socketTimeout = 1000 * 5;
 		connectTimeout = 1000 * 60 * 60;
-		appID = "";
-		appsecret = "";
+		appID = "wx1f66a1c5c4e8af87";
+		appsecret = "8c87978c52155d44f8c4abb76eb7f4bd";
 		flushTime = 1000 * 60 * 60;
 		templateSendTime = 1000 * 5;
 	}
 	
-	public static String getConding() {
-		return conding;
+	public static String getCoding() {
+		return coding;
 	}
 	
-	public static void setConding(String conding) {
-		WxConfiguration.conding = conding;
+	public static void setCoding(String coding) {
+		WxConfiguration.coding = coding;
 	}
 	
 	public static int getSocketTimeout() {

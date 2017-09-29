@@ -1,22 +1,23 @@
 package tag;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 /**
  * Created by cellargalaxy on 17-9-23.
  */
 public interface TagApi {
-	int createTag(String accessToken, String tagName);
+	JSONObject createTag(String tagName);
 	
-	boolean deleteTag(String accessToken, int tagId);
+	JSONObject deleteTag(int tagId);
 	
-	JSONArray getTags(String accessToken);
+	JSONObject getTags();
 	
-	JSONArray getTagOpenIds(String accessToken, int tagId);
+	JSONObject getTagOpenIds(int tagId);
 	
-	boolean addTagIntoOpenId(String accessToken, int tagId, JSONArray openIds);
+	JSONObject addTagIntoOpenId(int tagId, JSONArray openIds);
 	
-	boolean deleteTagFromOpenId(String accessToken, int tagId, JSONArray openIds);
+	JSONObject deleteTagFromOpenId(int tagId, JSONArray openIds);
 	
-	JSONArray getOpenIdTags(String accessToken, String openId);
+	JSONObject getOpenIdTags(String openId);
 }

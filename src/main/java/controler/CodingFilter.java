@@ -14,8 +14,8 @@ public class CodingFilter implements Filter{
 	}
 	
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-		servletRequest.setCharacterEncoding(WxConfiguration.getConding());           //可以直接设置编码
-		servletResponse.setCharacterEncoding(WxConfiguration.getConding());    //也可以读取初始化的参数character
+		servletRequest.setCharacterEncoding(WxConfiguration.getCoding());
+		servletResponse.setCharacterEncoding(WxConfiguration.getCoding());
 		filterChain.doFilter(servletRequest, servletResponse);
 	}
 	

@@ -1,5 +1,6 @@
 package tag;
 
+import accessToken.AccessTokenApi;
 import configuration.WxConfiguration;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
@@ -12,143 +13,122 @@ import util.HttpRequestBaseResultGet;
  * Created by cellargalaxy on 17-9-23.
  */
 public class TagApiImpl implements TagApi {
+	private final AccessTokenApi accessTokenApi;
+	private final String coding;
 	
-	public int createTag(String accessToken, String tagName) {
-		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/create?access_token=" + accessToken);
-		httpPost.addHeader("Content-Type", "application/json;charset=" + WxConfiguration.getConding());
+	public TagApiImpl(AccessTokenApi accessTokenApi) {
+		this.accessTokenApi = accessTokenApi;
+		coding=WxConfiguration.getCoding();
+	}
+	
+	public JSONObject createTag(String tagName) {
+		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/create?access_token=" + accessTokenApi.getAccessToken());
+		httpPost.addHeader("Content-Type", "application/json;charset=" + coding);
 		JSONObject tag = new JSONObject();
 		tag.put("name", tagName);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("tag", tag);
-		StringEntity stringEntity = new StringEntity(jsonObject.toString(), WxConfiguration.getConding());
-		stringEntity.setContentEncoding(WxConfiguration.getConding());
+		StringEntity stringEntity = new StringEntity(jsonObject.toString(), coding);
+		stringEntity.setContentEncoding(coding);
 		stringEntity.setContentType("application/json");
 		httpPost.setEntity(stringEntity);
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpPost);
 		if (result == null) {
-			return -1;
+			return null;
 		}
-		JSONObject resultJson = new JSONObject(result);
-		if (resultJson.has("tag")) {
-			return resultJson.getJSONObject("tag").getInt("id");
-		}
-		return -1;
+		return new JSONObject(result);
 	}
 	
-	public boolean deleteTag(String accessToken, int tagId) {
-		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=" + accessToken);
-		httpPost.addHeader("Content-Type", "application/json;charset=" + WxConfiguration.getConding());
+	public JSONObject deleteTag(int tagId) {
+		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/delete?access_token=" + accessTokenApi.getAccessToken());
+		httpPost.addHeader("Content-Type", "application/json;charset=" + coding);
 		JSONObject tag = new JSONObject();
 		tag.put("id", tagId);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("tag", tag);
-		StringEntity stringEntity = new StringEntity(jsonObject.toString(), WxConfiguration.getConding());
-		stringEntity.setContentEncoding(WxConfiguration.getConding());
+		StringEntity stringEntity = new StringEntity(jsonObject.toString(), coding);
+		stringEntity.setContentEncoding(coding);
 		stringEntity.setContentType("application/json");
 		httpPost.setEntity(stringEntity);
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpPost);
 		if (result == null) {
-			return false;
+			return null;
 		}
-		JSONObject resultJson = new JSONObject(result);
-		if (resultJson.has("errcode") && resultJson.getInt("errcode") == 0) {
-			return true;
-		}
-		return false;
+		return new JSONObject(result);
 	}
 	
-	public JSONArray getTags(String accessToken) {
-		HttpGet httpGet = new HttpGet("https://api.weixin.qq.com/cgi-bin/tags/get?access_token=" + accessToken);
+	public JSONObject getTags() {
+		HttpGet httpGet = new HttpGet("https://api.weixin.qq.com/cgi-bin/tags/get?access_token=" + accessTokenApi.getAccessToken());
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpGet);
 		if (result == null) {
 			return null;
 		}
-		JSONObject resultJson = new JSONObject(result);
-		if (resultJson.has("tags")) {
-			return resultJson.getJSONArray("tags");
-		}
-		return null;
+		return new JSONObject(result);
 	}
 	
-	public JSONArray getTagOpenIds(String accessToken, int tagId) {
-		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=" + accessToken);
-		httpPost.addHeader("Content-Type", "application/json;charset=" + WxConfiguration.getConding());
+	public JSONObject getTagOpenIds(int tagId) {
+		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/user/tag/get?access_token=" + accessTokenApi.getAccessToken());
+		httpPost.addHeader("Content-Type", "application/json;charset=" + coding);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("tagid", tagId);
-		StringEntity stringEntity = new StringEntity(jsonObject.toString(), WxConfiguration.getConding());
-		stringEntity.setContentEncoding(WxConfiguration.getConding());
+		StringEntity stringEntity = new StringEntity(jsonObject.toString(), coding);
+		stringEntity.setContentEncoding(coding);
 		stringEntity.setContentType("application/json");
 		httpPost.setEntity(stringEntity);
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpPost);
 		if (result == null) {
 			return null;
 		}
-		JSONObject resultJson = new JSONObject(result);
-		if (resultJson.has("data")) {
-			return resultJson.getJSONObject("data").getJSONArray("openid");
-		}
-		return null;
+		return new JSONObject(result);
 	}
 	
-	public boolean addTagIntoOpenId(String accessToken, int tagId, JSONArray openIds) {
-		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=" + accessToken);
-		httpPost.addHeader("Content-Type", "application/json;charset=" + WxConfiguration.getConding());
+	public JSONObject addTagIntoOpenId(int tagId, JSONArray openIds) {
+		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/members/batchtagging?access_token=" + accessTokenApi.getAccessToken());
+		httpPost.addHeader("Content-Type", "application/json;charset=" + coding);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("tagid", tagId);
 		jsonObject.put("openid_list", openIds);
-		StringEntity stringEntity = new StringEntity(jsonObject.toString(), WxConfiguration.getConding());
-		stringEntity.setContentEncoding(WxConfiguration.getConding());
+		StringEntity stringEntity = new StringEntity(jsonObject.toString(), coding);
+		stringEntity.setContentEncoding(coding);
 		stringEntity.setContentType("application/json");
 		httpPost.setEntity(stringEntity);
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpPost);
 		if (result == null) {
-			return false;
+			return null;
 		}
-		JSONObject resultJson = new JSONObject(result);
-		if (resultJson.has("errcode") && resultJson.getInt("errcode") == 0) {
-			return true;
-		}
-		return false;
+		return new JSONObject(result);
 	}
 	
-	public boolean deleteTagFromOpenId(String accessToken, int tagId, JSONArray openIds) {
-		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token=" + accessToken);
-		httpPost.addHeader("Content-Type", "application/json;charset=" + WxConfiguration.getConding());
+	public JSONObject deleteTagFromOpenId(int tagId, JSONArray openIds) {
+		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/members/batchuntagging?access_token=" + accessTokenApi.getAccessToken());
+		httpPost.addHeader("Content-Type", "application/json;charset=" + coding);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("tagid", tagId);
 		jsonObject.put("openid_list", openIds);
-		StringEntity stringEntity = new StringEntity(jsonObject.toString(), WxConfiguration.getConding());
-		stringEntity.setContentEncoding(WxConfiguration.getConding());
+		StringEntity stringEntity = new StringEntity(jsonObject.toString(), coding);
+		stringEntity.setContentEncoding(coding);
 		stringEntity.setContentType("application/json");
 		httpPost.setEntity(stringEntity);
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpPost);
 		if (result == null) {
-			return false;
+			return null;
 		}
-		JSONObject resultJson = new JSONObject(result);
-		if (resultJson.has("errcode") && resultJson.getInt("errcode") == 0) {
-			return true;
-		}
-		return false;
+		return new JSONObject(result);
 	}
 	
-	public JSONArray getOpenIdTags(String accessToken, String openId) {
-		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token=" + accessToken);
-		httpPost.addHeader("Content-Type", "application/json;charset=" + WxConfiguration.getConding());
+	public JSONObject getOpenIdTags(String openId) {
+		HttpPost httpPost = new HttpPost("https://api.weixin.qq.com/cgi-bin/tags/getidlist?access_token=" + accessTokenApi.getAccessToken());
+		httpPost.addHeader("Content-Type", "application/json;charset=" + coding);
 		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("openid", openId);
-		StringEntity stringEntity = new StringEntity(jsonObject.toString(), WxConfiguration.getConding());
-		stringEntity.setContentEncoding(WxConfiguration.getConding());
+		StringEntity stringEntity = new StringEntity(jsonObject.toString(), coding);
+		stringEntity.setContentEncoding(coding);
 		stringEntity.setContentType("application/json");
 		httpPost.setEntity(stringEntity);
 		String result = HttpRequestBaseResultGet.getHttpRequestBaseResult(httpPost);
 		if (result == null) {
 			return null;
 		}
-		JSONObject resultJson = new JSONObject(result);
-		if (resultJson.has("tagid_list")) {
-			return resultJson.getJSONArray("tagid_list");
-		}
-		return null;
+		return new JSONObject(result);
 	}
 }

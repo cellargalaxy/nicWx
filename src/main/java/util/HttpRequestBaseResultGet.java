@@ -23,7 +23,7 @@ public class HttpRequestBaseResultGet {
 			HttpResponse httpResponse = HTTP_CLIENT.execute(httpRequestBase);
 			if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
 				HttpEntity entity = httpResponse.getEntity();
-				return EntityUtils.toString(entity, WxConfiguration.getConding());
+				return EntityUtils.toString(entity, WxConfiguration.getCoding());
 			}
 			return null;
 		} catch (Exception e) {
