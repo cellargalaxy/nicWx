@@ -1,25 +1,56 @@
 package configuration;
 
+import javax.security.auth.login.Configuration;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.Properties;
+
 /**
  * Created by cellargalaxy on 17-9-22.
  */
 public class WxConfiguration {
+	private static String appID;
+	private static String appsecret;
 	private static String coding;
 	private static int socketTimeout;
 	private static int connectTimeout;
-	private static String appID;
-	private static String appsecret;
-	private static int flushTime;
-	private static int templateSendTime;
+	private static int accessTokenFlushTime;
 	
 	static {
-		coding = "utf-8";
-		socketTimeout = 1000 * 5;
-		connectTimeout = 1000 * 60 * 60;
-		appID = "wx1f66a1c5c4e8af87";
-		appsecret = "8c87978c52155d44f8c4abb76eb7f4bd";
-		flushTime = 1000 * 60 * 60;
-		templateSendTime = 1000 * 5;
+		Properties properties = new Properties();
+		File confFile = new File(new File(Configuration.class.getResource("").getPath()).getParentFile().getAbsolutePath() + "/nicWx.properties");
+		try {
+			properties.load(new InputStreamReader(new FileInputStream(confFile)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		appID = properties.getProperty("appID");
+		appsecret = properties.getProperty("appsecret");
+		coding = properties.getProperty("coding");
+		if (coding == null) {
+			coding = "utf-8";
+		}
+		try {
+			socketTimeout = new Integer(properties.getProperty("socketTimeout"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			socketTimeout = 1000 * 5;
+		}
+		try {
+			connectTimeout = new Integer(properties.getProperty("connectTimeout"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			connectTimeout = 1000 * 60 * 60;
+		}
+		try {
+			accessTokenFlushTime = new Integer(properties.getProperty("accessTokenFlushTime"));
+		} catch (Exception e) {
+			e.printStackTrace();
+			accessTokenFlushTime = 1000 * 60 * 60;
+		}
 	}
 	
 	public static String getCoding() {
@@ -62,19 +93,12 @@ public class WxConfiguration {
 		WxConfiguration.appsecret = appsecret;
 	}
 	
-	public static int getFlushTime() {
-		return flushTime;
+	public static int getAccessTokenFlushTime() {
+		return accessTokenFlushTime;
 	}
 	
-	public static void setFlushTime(int flushTime) {
-		WxConfiguration.flushTime = flushTime;
+	public static void setAccessTokenFlushTime(int accessTokenFlushTime) {
+		WxConfiguration.accessTokenFlushTime = accessTokenFlushTime;
 	}
 	
-	public static int getTemplateSendTime() {
-		return templateSendTime;
-	}
-	
-	public static void setTemplateSendTime(int templateSendTime) {
-		WxConfiguration.templateSendTime = templateSendTime;
-	}
 }

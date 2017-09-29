@@ -1,12 +1,10 @@
 package accessToken;
 
 import configuration.WxConfiguration;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import util.HttpRequestBaseResultGet;
-import wx.WxApiImpl;
 
 /**
  * Created by cellargalaxy on 17-9-22.
@@ -22,7 +20,7 @@ public class AccessTokenApiThread extends AccessTokenApi {
 		accessTokenHttpGet = new HttpGet("https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" +
 				WxConfiguration.getAppID() + "&secret=" + WxConfiguration.getAppsecret());
 		runable=true;
-		sleepTime=WxConfiguration.getFlushTime();
+		sleepTime=WxConfiguration.getAccessTokenFlushTime();
 	}
 	
 	public void flushAccessToken() {
